@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EV Recharge Estimator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .ev-container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #ff8800;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e37000;
+    }
+    .result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ev-container">
+    <h2>⚡ EV Recharge Estimator</h2>
+    <input type="number" id="batteryPercent" placeholder="Current battery % (e.g., 40)">
+    <input type="number" id="batteryCapacity" placeholder="Battery capacity in kWh (e.g., 50)">
+    <input type="number" id="chargingSpeed" placeholder="Charging speed in kW (e.g., 11)">
+    <input type="number" id="electricityCost" placeholder="Cost per kWh in ₹ (e.g., 7)">
+    <button onclick="calculateRecharge()">Calculate Recharge</button>
+    <div class="result" id="rechargeResult"></div>
+  </div>
+
+  <script>
+    function calculateRecharge() {
+      const batteryPercent = parseFloat(document.getElementById('batteryPercent').value);
+      const batteryCapacity = parseFloat(document.getElementById('batteryCapacity').value);
+      const chargingSpeed = parseFloat(document.getElementById('chargingSpeed').value);
+      const electricityCost = parseFloat(document.getElementById('electricityCost').value);
+
+      if (isNaN(batteryPercent) || isNaN(batteryCapacity) || isNaN(chargingSpeed) || isNaN(electricityCost)) {
+        document.getElementById('rechargeResult').innerHTML = '<p>Please fill all the fields correctly.</p>';
+        return;
+      }
+
+      const neededPercent = 100 - batteryPercent;
+      const neededKWh = (neededPercent / 100) * batteryCapacity;
+      const estimatedTime = neededKWh / chargingSpeed;
+      const cost = neededKWh * electricityCost;
+
+      document.getElementById('rechargeResult').innerHTML = `
+        <p><strong>Energy Needed:</strong> ${neededKWh.toFixed(2)} kWh</p>
+        <p><strong>Estimated Time:</strong> ${estimatedTime.toFixed(2)} hours</p>
+        <p><strong>Estimated Cost:</strong> ₹${cost.toFixed(2)}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
